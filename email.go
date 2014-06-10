@@ -24,15 +24,20 @@ type Message struct {
 	Attachments     map[string][]byte
 }
 
-func (m *Message) Attach(file string) error {
-	b, err := ioutil.ReadFile(file)
-	if err != nil {
-		return err
-	}
-
-	_, fileName := filepath.Split(file)
-	m.Attachments[fileName] = b
+func (m *Message) Attach(filename string, content []byte) error {
+	m.Attachments[filename] = content
 	return nil
+}
+
+func (m *Message) AttachFile(file string) error {
+	b, err := ioutil.ReadFile(file)
+    if err != nil {
+        return err
+    }
+
+    _, fileName := filepath.Split(file)
+
+	return m.Attach(fileName, b)
 }
 
 // NewMessage returns a new Message that can compose an email with attachments
